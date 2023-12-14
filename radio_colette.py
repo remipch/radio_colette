@@ -8,7 +8,7 @@ from glob import glob
 
 # WARNING: Keyboard and mouse are unusable while button is off
 
-audio_glob_pattern = "/home/pi/radio_colette/audio/*.mp3"
+audio_glob_pattern = "/home/pi/radio_colette/audio/**/*.mp3"
 
 # Various sleep times in seconds
 sleep_between_tracks = 2
@@ -30,7 +30,7 @@ def startPlayNextMp3File():
    while True:
       if len(mp3_files) == 0:
          # List dir again because files may be added or removed
-         mp3_files = glob(audio_glob_pattern)
+         mp3_files = glob(audio_glob_pattern, recursive=True)
          random.shuffle(mp3_files)
 
       if len(mp3_files) == 0:

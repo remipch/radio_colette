@@ -18,6 +18,9 @@ Button state is read by Raspberry Pi GPIO2 input.
 
 USB power is switched off when the button is off.
 
+| :warning: It makes keyboard and mouse unusable while button is off |
+|--------------------------------------------------------------------|
+
 ## Install
 
 ### Install Raspberry Pi SD card

@@ -6,6 +6,8 @@ from gpiozero import Button
 from time import sleep
 from glob import glob
 
+# WARNING: Keyboard and mouse are unusable while button is off
+
 audio_glob_pattern = "/home/pi/radio_colette/audio/*.mp3"
 
 # Various sleep times in seconds
@@ -52,14 +54,22 @@ def isPlayerPlaying():
 def isButtonPressed():
    return button.is_pressed
 
+def switchUsbOn():
+   os.system("sudo uhubctl -l 1-1 -p 2 -a 1")
+
+def switchUsbOff():
+   os.system("sudo uhubctl -l 1-1 -p 2 -a 0")
+
 def setMode(mode):
    global playing_mode
    playing_mode = mode
    if mode:
+      switchUsbOn()
       startPlayNextMp3File()
    else:
       print("OFF: Waiting button press\n")
       stopPlaying()
+      switchUsbOff()
 
 setMode(isButtonPressed())
 

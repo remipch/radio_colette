@@ -1,6 +1,6 @@
-# Radio Colette
+# Radio Colette :notes:
 
-Minimalist MP3 player for Mamie Colette.
+Minimalist MP3 player for Mamie Colette, my grandmother :older_woman: :two_hearts:
 
 By "minimalist", I mean the whole user interface is :
 
@@ -14,7 +14,7 @@ Behind the button is a Raspberry Pi 3 B with external speakers powered by USB.
 
 Volume control is on external speakers.
 
-Button state is read by Raspberry Pi GPIO.
+Button state is read by Raspberry Pi GPIO2 input.
 
 USB power is switched off when the button is off.
 
@@ -46,4 +46,18 @@ cd uhubctl
 make
 sudo make install
 ```
+
+### Manual config
+
+Enable audio output from "Device Profiles" icon :
+- Disable HDMI Digital Stereo Output
+- Enable AV Jack Analog Stereo Output
+
+Setup keyboard layout with : Menu > Preference > Raspberry Pi Configuration > Localisation > Keyboard
+
+### Electrical setup
+
+GPIO2 has a builtin pullup, just connect the button between GPIO2 and GND, so :
+- On = connected circuit = play
+- Off = disconnected circuit = stop
 

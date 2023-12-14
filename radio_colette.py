@@ -3,7 +3,7 @@ import random
 import vlc
 from datetime import datetime
 from gpiozero import Button
-from time import sleep
+from time import sleep, time
 from glob import glob
 
 # WARNING: Keyboard and mouse are unusable while button is off
@@ -14,6 +14,7 @@ audio_glob_pattern = "/home/pi/radio_colette/audio/*.mp3"
 sleep_between_tracks = 2
 sleep_between_buttons_checks = 0.1
 sleep_between_dir_list = 2 # Prevent to use all CPU if there is no MP3
+wait_before_switch_usb_off = 5
 
 vlc_instance = vlc.Instance()
 player = vlc_instance.media_player_new()
@@ -55,23 +56,24 @@ def isButtonPressed():
    return button.is_pressed
 
 def switchUsbOn():
-   os.system("sudo uhubctl -l 1-1 -p 2 -a 1")
+   os.system("sudo uhubctl -l 1-1 -p 2 -a 1 > /tmp/uhubctl.log")
 
 def switchUsbOff():
-   os.system("sudo uhubctl -l 1-1 -p 2 -a 0")
+   os.system("sudo uhubctl -l 1-1 -p 2 -a 0 > /tmp/uhubctl.log")
 
 def setMode(mode):
    global playing_mode
    playing_mode = mode
    if mode:
-      switchUsbOn()
       startPlayNextMp3File()
    else:
       print("OFF: Waiting button press\n")
       stopPlaying()
-      switchUsbOff()
 
+switchUsbOn()
 setMode(isButtonPressed())
+
+off_start_time = None # Time in seconds when the off mode has been set
 
 while True:
    if playing_mode:
@@ -83,7 +85,12 @@ while True:
             setMode(True)
       else:
          setMode(False)
+         off_start_time = time()
    else:
       sleep(sleep_between_buttons_checks)
       if isButtonPressed():
+         switchUsbOn()
          setMode(True)
+      elif off_start_time is not None and (time() - off_start_time) > wait_before_switch_usb_off:
+         off_start_time = None
+         switchUsbOff()

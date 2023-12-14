@@ -25,9 +25,10 @@ USB power is switched off when the button is off.
 
 ### Install Raspberry Pi SD card
 
-Using rpi-installer, choose `RASPBERRY PI OS (LEGACY)` with security updates, without recommanded applications.
+Using rpi-installer, choose `RASPBERRY PI OS (LEGACY)` with desktop and
+security updates, without recommanded applications.
 
-Insert SD card and reboot the Pi.
+Insert SD card and start the Pi.
 
 ### Install python-vlc
 
@@ -50,13 +51,31 @@ make
 sudo make install
 ```
 
+### Install radio_colette
+
+```
+cd ~
+git clone https://github.com/remipch/radio_colette
+```
+
 ### Manual config
+
+Copy some MP3 files to `/home/pi/radio_colette/audio/` directory.
 
 Enable audio output from "Device Profiles" icon :
 - Disable HDMI Digital Stereo Output
 - Enable AV Jack Analog Stereo Output
 
-Setup keyboard layout with : Menu > Preference > Raspberry Pi Configuration > Localisation > Keyboard
+Autostart radio_colette (from
+[forums.raspberrypi.com](https://forums.raspberrypi.com/viewtopic.php?t=294014)) :
+
+```
+sudo nano /etc/xdg/lxsession/LXDE-pi/autostart
+```
+
+and add this line at the end :
+
+`@lxterminal -e python3 /home/pi/radio_colette/radio_colette.py`
 
 ### Electrical setup
 
@@ -64,3 +83,7 @@ GPIO2 has a builtin pullup, just connect the button between GPIO2 and GND, so :
 - On = connected circuit = play
 - Off = disconnected circuit = stop
 
+From [raspberry.com](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html),
+here is the GPIO pinout :
+
+![GPIO pinout](pinout.png)

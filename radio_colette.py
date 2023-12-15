@@ -25,6 +25,8 @@ mp3_files = []
 
 playing_mode = None # True=ON False=OFF
 
+off_start_time = None # Time in seconds when the off mode has been set
+
 def startPlayNextMp3File():
    global mp3_files
    while True:
@@ -62,18 +64,17 @@ def switchUsbOff():
    os.system("sudo uhubctl -l 1-1 -p 2 -a 0 > /tmp/uhubctl.log")
 
 def setMode(mode):
-   global playing_mode
+   global playing_mode, off_start_time
    playing_mode = mode
    if mode:
       startPlayNextMp3File()
    else:
       print("OFF: Waiting button press\n")
       stopPlaying()
+      off_start_time = time()
 
 switchUsbOn()
 setMode(isButtonPressed())
-
-off_start_time = None # Time in seconds when the off mode has been set
 
 while True:
    if playing_mode:
@@ -85,7 +86,6 @@ while True:
             setMode(True)
       else:
          setMode(False)
-         off_start_time = time()
    else:
       sleep(sleep_between_buttons_checks)
       if isButtonPressed():
